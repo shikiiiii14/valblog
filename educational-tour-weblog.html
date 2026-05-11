@@ -640,12 +640,14 @@ const stops = [
     color: "#FF6B9D",
     colorLight: "#FFE4F0",
     photos: [
-      "blog/20260405_141213.jpg",
-      "blog/20260405_144917.jpg",
+      "blog/20260405_140250(0).jpg",
       "blog/20260405_140355(0).jpg",
+      "blog/20260405_141213.jpg",
       "blog/20260405_144607.jpg",
-      "blog/20260405_153645.jpg",
-      "blog/20260405_151638.jpg"
+      "blog/20260405_144838.jpg",
+      "blog/20260405_144917.jpg",
+      "blog/20260405_151638.jpg",
+      "blog/20260405_153645.jpg"
     ],
     videoEmbed: "",
     reflection: "We enjoy touring in the first stop, the Luneta Park and Intramurous. We explored various exhibits showcasing art, history, and culture. It was fascinating to see artifacts and artworks that connect us to our heritage. This visit deepened our appreciation for our roots and inspired us to learn more about our history."
@@ -675,7 +677,7 @@ const stops = [
       "blog2/20260406_155248.jpg",
       "blog2/20260406_162808.jpg",
     ],
-    videoEmbed: "blog2/copy_A5C669E7-7150-4C24-AE99-C5BB5E71C5A8.mov",
+    videoEmbed: "https://drive.google.com/file/d/1tIK0EktTTnteZJ6Lz9qXujPH95fruLR9/view?usp=drive_link",
     reflection: "We had an amazing time visiting the tech company and corporate office. It was inspiring to see how technology is shaping our world and the innovative work happening in these spaces. We learned about different career paths and the importance of adaptability and continuous learning in today's fast-paced world."
   },
   {
@@ -748,7 +750,7 @@ const stops = [
       "tag/photo_6244420181513933409_y.jpg",
       "tag/photo_6244420181513933410_y.jpg"
     ],
-    videoEmbed: "copy_1A40D352-3F4D-423D-9936-36CC6D2B4F67.mov",
+    videoEmbed: "https://drive.google.com/file/d/1DlYJitlcoJ1ZY0EVTrySTS8EFsBOVKTH/view?usp=drive_link",
     reflection: "Tagaytay trip was a refreshing escape into nature and a chance to bond with friends. We enjoyed the cool breeze, scenic views, and delicious food. It was a reminder of the beauty around us and the importance of taking time to relax and connect with loved ones."
   },
   {
@@ -770,7 +772,7 @@ const stops = [
       "bag/photo_6057351759950189385_w.jpg",
       "bag/photo_6057351759950189386_w.jpg"
     ],
-    videoEmbed: "copy_31E8A435-8D42-4EEE-9EC7-93A0F9A0CB5C.mov",
+    videoEmbed: "https://drive.google.com/file/d/1DDp3suuBTAU3zCdXTL0M1s7jNlBiCvDB/view?usp=drive_link",
     reflection: "Best stop of the tour! The Baguio experience was a delightful blend of culture, nature, and fun. We explored the vibrant city, enjoyed the cool climate, and immersed ourselves in the local culture. It was a memorable adventure that left us with a deeper appreciation for the diversity and beauty of our country."
   },
   {
@@ -787,7 +789,8 @@ const stops = [
       "rando/photo_6057351759950189401_w.jpg",
       "rando/photo_6057351759950189402_w.jpg",
     ],
-    videoEmbed: "copy_CEF1192C-E562-43B3-9F2A-29DB201C33E5.mov",
+    videoEmbed: "https://drive.google.com/file/d/1MVm4r2xbIZBFEn-U8RjcAu3xLV3ZgBoi/view?usp=drive_link",
+    videoEmbed2: "https://drive.google.com/file/d/1u8Lc4oayrW3-7cBPJAi4Bsh7h06V0o1s/view?usp=drive_link",
     reflection: "Its the end of the tour! The See You Again Luzon Memories stop was a bittersweet farewell to an unforgettable journey. We reminisced about the incredible experiences, the laughter, and the bonds we formed along the way. It was a celebration of our shared adventure and a reminder that while this tour may be ending, the memories and friendships will last a lifetime."
   }
 ];
@@ -876,15 +879,43 @@ function render() {
   // Video
   const vs = document.getElementById('mVideoSec');
   const vd = document.getElementById('mVideo');
+  let videoHTML = '';
+  
+  // Handle first video
   if (s.videoEmbed && s.videoEmbed.trim()) {
-    vs.style.display = 'block';
-    // Check if it's a YouTube URL or local video file
     if (s.videoEmbed.includes('youtube.com') || s.videoEmbed.includes('youtu.be')) {
-      vd.innerHTML = `<div class="video-embed"><iframe src="${s.videoEmbed}?autoplay=1" allowfullscreen></iframe></div>`;
+      videoHTML += `<div class="video-embed"><iframe src="${s.videoEmbed}?autoplay=1" allowfullscreen></iframe></div>`;
+    } else if (s.videoEmbed.includes('drive.google.com')) {
+      let embedUrl = s.videoEmbed;
+      if (embedUrl.includes('/view')) {
+        embedUrl = embedUrl.replace('/view', '/preview');
+      }
+      videoHTML += `<div class="video-embed"><iframe src="${embedUrl}" allow="autoplay" allowfullscreen></iframe></div>`;
     } else {
-      // Local video file
-      vd.innerHTML = `<div class="video-embed"><video controls autoplay muted style="width:100%;height:100%;"><source src="${s.videoEmbed}" type="video/mp4"></video></div>`;
+      videoHTML += `<div class="video-embed"><video controls autoplay muted style="width:100%;height:100%;"><source src="${s.videoEmbed}" type="video/mp4"><source src="${s.videoEmbed}" type="video/quicktime"></video></div>`;
     }
+  }
+  
+  // Handle second video if it exists
+  if (s.videoEmbed2 && s.videoEmbed2.trim()) {
+    videoHTML += `<div style="margin-top: 16px;">`;
+    if (s.videoEmbed2.includes('youtube.com') || s.videoEmbed2.includes('youtu.be')) {
+      videoHTML += `<div class="video-embed"><iframe src="${s.videoEmbed2}?autoplay=1" allowfullscreen></iframe></div>`;
+    } else if (s.videoEmbed2.includes('drive.google.com')) {
+      let embedUrl = s.videoEmbed2;
+      if (embedUrl.includes('/view')) {
+        embedUrl = embedUrl.replace('/view', '/preview');
+      }
+      videoHTML += `<div class="video-embed"><iframe src="${embedUrl}" allow="autoplay" allowfullscreen></iframe></div>`;
+    } else {
+      videoHTML += `<div class="video-embed"><video controls autoplay muted style="width:100%;height:100%;"><source src="${s.videoEmbed2}" type="video/mp4"><source src="${s.videoEmbed2}" type="video/quicktime"></video></div>`;
+    }
+    videoHTML += `</div>`;
+  }
+  
+  if (videoHTML) {
+    vs.style.display = 'block';
+    vd.innerHTML = videoHTML;
   } else {
     vs.style.display = 'block';
     vd.innerHTML = `<div class="video-ph"><span>🎬</span><span>Paste a YouTube embed URL or video file path in the JS data</span></div>`;
